@@ -13,8 +13,8 @@ class Friends(models.Model):
     followers = models.IntegerField()
     date = models.DateField()
     
-#class Upload_SeedPages(models.Model):
-#    seedpage_file = models.FileField()
-#    seedpage_link = models.URLField()
+class Upload_SeedPages(models.Model):
+    seedpage_file = models.FileField(upload_to='/uploads/seedpages/')
+    seedpage_link = models.URLField()
     
 
