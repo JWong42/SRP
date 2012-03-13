@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <title>Seedpages</title>
+    </head>
+    <body>
+        <h1>Seedpages</h1>
+    
+        <form method = "post" enctype="multipart/form-data">
+            {{ form.as_p }}
+            <input type="submit" value="Submit File">
+        </form>
+    
+        <h2>Request details</h2>
+        
+        <p>
+        Request method: {{ request.method }}
+        <br />
+        POST data: {{ request.POST|default:"No data" }}
+        <br />
+        FILES data: {{ request.FILES|default:"No data" }}
+        </p>
+
+        <h2>Form details</h2>
+
+        <p>
+        Cleaned data: {{ form.cleaned_data|default:"No data" }}
+        </p>
+
+    </body>
+</html>
+

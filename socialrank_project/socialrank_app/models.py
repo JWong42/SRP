@@ -1,20 +1,20 @@
 from django.db import models
 
-# Create your models here.
-
-class Page(models.Model): 
-    name = models.CharField(max_length=100)
-    link = models.URLField()
-#    pic = models.ImageField()
+class Pages(models.Model): 
+    name = models.CharField(max_length=100, null=False, blank=False)
+    link = models.URLField(unique=True, null=False, blank=False)
+    img_link = models.URLField(null=True)
+    
+    def __unicode__(self): 
+        return self.name
 
 class Friends(models.Model):
-    page = models.ForeignKey(Page)
+    page = models.ForeignKey(Pages)
     following = models.IntegerField()
     followers = models.IntegerField()
-    date = models.DateField()
+    date = models.DateTimeField(auto_now_add=True)
     
-class Upload_SeedPages(models.Model):
-    seedpage_file = models.FileField(upload_to='/uploads/seedpages/')
-    seedpage_link = models.URLField()
+    def __unicode__(self): 
+        return u'%s, %s, %s' %(self.page.name, self.following, self.followers)
     
 
