@@ -41,7 +41,14 @@
          <div id="placeholder" style="width:600px;height:300px;"></div>       
             
         </div>
+             Brand's Name | Brand Following | Brand's Followers
+        </br>
+        {% for brand in brands %}
+            <img src="http://{{ brand.img}}" width="42" height="42" /> {{ brand.name }} {{ brand.following }} and {{ brand.followers }}. 
+            </br>
+        {% endfor %}
         
     </body>
+    
 </html>
 

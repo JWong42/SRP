@@ -12,7 +12,7 @@ class Friends(models.Model):
     page = models.ForeignKey(Pages)
     following = models.IntegerField()
     followers = models.IntegerField()
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateField(auto_now_add=True)
     
     def __unicode__(self): 
         return u'%s, %s, %s' %(self.page.name, self.following, self.followers)

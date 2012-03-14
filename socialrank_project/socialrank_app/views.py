@@ -13,13 +13,29 @@ import re
 
 def main_page(request):
 
-    # filter the Friends model of all pages with the latest date/time (or today) - then sort from highest to lowest - then use [0:10] to slice the first 10 pages
+    # filter the Friends model of all pages with the latest date/time (or today)  - then sort from highest to lowest - then use [0:10] to slice the first 10 pages
     # use datetime.date.today() to select pages with follower numbers for today
     
+    brands = []
+    
+    # Select the friends statistics of pages for today and order from highest followers to lowest 
+    pages = Friends.objects.filter(date=datetime.date.today()).order_by('-followers')
+    
+    for page_object in pages: 
+        
+        brand = {}
+        
+        brand['name'] = page_object.page.name
+        brand['img'] = page_object.page.img_link
+        brand['following'] = page_object.following
+        brand['followers'] = page_object.followers
+        brands.append(brand) 
+         
     variables = RequestContext(request, {
-        'head_title': u'Django SocialRank', 
-        'page_title': u'Welcome to SocialRank', 
-        'page_body': u"Where you can check and evaluate your brand's social status!!",    
+        'head_title' : u'Django SocialRank', 
+        'page_title' : u'Welcome to SocialRank', 
+        'page_body' : u"Where you can check and evaluate your brand's social status!!",    
+        'brands' : brands,
     })     
     return render_to_response(
         'main_page.html', variables) 
@@ -47,6 +63,7 @@ def seed_pages(request):
                     page_name = page_name.group(0)
                 except AttributeError: 
                     page_name = '><'
+                page_name = re.sub('amp;','', page_name)
                 page_name = page_name.strip('>' + '<') 
                 site['name'] = page_name
                 
@@ -186,7 +203,7 @@ def crawl_daily(request):
                 } 
     return render_to_response('crawl_report.html', variables)
 
-
-
+#def individual_page(request): 
+#    use page.friends_set.all() and make a graph 
 
 
