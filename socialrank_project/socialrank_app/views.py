@@ -26,6 +26,10 @@ def main_page(request):
         brand = {}
         
         brand['name'] = page_object.page.name
+        link = str(page_object.page.link)
+        link = re.search('[0-9]+', link).group(0)
+        link = int(link)
+        brand['link'] = link 
         brand['img'] = page_object.page.img_link
         brand['following'] = page_object.following
         brand['followers'] = page_object.followers
