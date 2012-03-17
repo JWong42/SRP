@@ -8,6 +8,8 @@ from socialrank_app.forms import TestForm
 from urllib2 import urlopen 
 from BeautifulSoup import BeautifulSoup
 import datetime
+import time 
+import calendar
 import re 
 
 
@@ -207,7 +209,25 @@ def crawl_daily(request):
                 } 
     return render_to_response('crawl_report.html', variables)
 
-#def individual_page(request): 
-#    use page.friends_set.all() and make a graph 
+def individual_page(request, page_id): 
 
+    page = Pages.objects.get(link__contains=page_id)
+    name = page.name 
+    friends_set = page.friends_set.all()
+    
+    results = []
+    for each in friends_set:
+         date = each.date
+         date = calendar.timegm(date.timetuple())        
+         date = date * 1000 
+#         date = time.mktime(date.timetuple())
+         followers = each.followers
+         results.append([date, followers])
+         
+    variables = RequestContext(request, {
+        'name' : name,
+        'results' : results,  
+    })
+    
+    return render_to_response('individual_page.html', variables)
 

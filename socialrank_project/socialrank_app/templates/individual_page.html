@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <title>{{ head_title }}</title>
+    
+        <script language='javascript' type='text/javascript' src='{{ STATIC_URL }}/js/jquery/jquery-1.7.1.min.js'></script>
+        <script language='javascript' type='text/javascript' src='{{ STATIC_URL }}/js/flot-flot-1a99246/jquery.flot.js'></script>
+        
+        <script type="text/javascript">   
+            $(function () {
+                $.plot($("#placeholder"), [ {{results}} ], { xaxis: { mode: "time", tickSize : [1, "day"]  } });
+            });
+    
+</script>
+        
+    </head>
+    <body>
+       
+        <h1>{{ name }}</h1>
+              
+        <div id="placeholder" style="width:600px;height:300px;"></div>       
+        
+    </body>
+    
+</html>

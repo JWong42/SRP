@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     (r'^$', main_page), 
     (r'^seedpages/', seed_pages),
     (r'^crawl/', crawl_daily),
+    (r'^(\d+)/$', individual_page), 
 
     # Examples:
     # url(r'^$', 'socialrank_project.views.home', name='home'),
