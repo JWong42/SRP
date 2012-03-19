@@ -216,17 +216,25 @@ def individual_page(request, page_id):
     friends_set = page.friends_set.all()
     
     results = []
+    results2 = []
+    
     for each in friends_set:
-         date = each.date
-         date = calendar.timegm(date.timetuple())        
-         date = date * 1000 
+        date = each.date
+        date = calendar.timegm(date.timetuple())        
+        date = date * 1000 
+        date2 = each.date.strftime("%m-%d-%Y")
 #         date = time.mktime(date.timetuple())
-         followers = each.followers
-         results.append([date, followers])
+        following = each.following 
+        followers = each.followers
+        results.append([date, followers])
+        results2.append([date2, following, followers])
+    
+    results2.reverse()
          
     variables = RequestContext(request, {
         'name' : name,
         'results' : results,  
+        'results2' : results2,
     })
     
     return render_to_response('individual_page.html', variables)

@@ -19,6 +19,14 @@
               
         <div id="placeholder" style="width:600px;height:300px;"></div>       
         
+        </br>
+        <b>Date | Following | Followers</b>
+        </br></br>
+        {% for result in results2 %}
+            {{ result.0 }} | {{ result.1 }} | {{ result.2 }}
+            </br>
+        {% endfor %}
+        
     </body>
     
 </html>
