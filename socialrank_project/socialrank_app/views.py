@@ -275,11 +275,11 @@ def crawl_daily(request):
             
         friends,created_dummy = Friends.objects.get_or_create(
                        page = page, 
-                       date = datetime.date.today())  
-            
-        friends.following = no_following
-        friends.followers = no_followers 
-                
+                       date = datetime.date.today(),
+                       following = no_following,
+                       followers = no_followers                      
+                       )  
+             
         friends.save()
                                                                                
     variables = {
