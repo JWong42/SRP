@@ -111,7 +111,7 @@ def main_page(request):
                      
     variables = RequestContext(request, {
         'head_title' : u'Django SocialRank', 
-        'page_title' : u'Welcome to SocialRank', 
+        'page_title' : u'Welcome to Social Rank', 
         'page_body' : u"Where you can check and evaluate your brand's social status!!",    
         'brands' : brands,
         'form' : form, 
@@ -318,3 +318,5 @@ def individual_page(request, page_id):
     
     return render_to_response('individual_page.html', variables)
 
+def index(request): 
+    return render_to_response('index.html', RequestContext(request, {} ))

@@ -1,16 +1,17 @@
 from django.conf.urls.defaults import patterns, include, url
 from socialrank_app.views import * 
 
-
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^$', main_page), 
+    (r'^$', main_page),
+#    (r'^$', index),  
     (r'^seedpages/', seed_pages),
     (r'^crawl/', crawl_daily),
     (r'^(\d+)/$', individual_page), 
+
 
     # Examples:
     # url(r'^$', 'socialrank_project.views.home', name='home'),
