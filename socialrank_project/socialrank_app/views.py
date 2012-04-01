@@ -20,10 +20,14 @@ def main_page(request):
     # Select the friends statistics of pages for today and order from highest followers to lowest 
     pages = Friends.objects.filter(date=datetime.date.today()).order_by('-followers')
     
+    rank = 1 
+    
     for page_object in pages: 
         
         brand = {}       
         
+        brand['rank'] = rank 
+        rank += 1 
         name = page_object.page.name 
         name = re.sub('amp;', '', name)
         brand['name'] = name
