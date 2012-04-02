@@ -9,7 +9,7 @@ from django import forms
 #        fields = ('seedpage_file',)
  
 class AddPageForm(forms.Form): 
-    id = forms.CharField()
+    IDfff = forms.CharField()
 
 class SeedPagesForm(forms.Form): 
     file = forms.FileField()
