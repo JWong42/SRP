@@ -15,6 +15,6 @@ class Friends(models.Model):
     date = models.DateField(auto_now_add=True)
     
     def __unicode__(self): 
-        return u'%s, %s, %s' %(self.page.name, self.following, self.followers)
+        return u'%s, %s, %s' %(self.page.name, self.followers, self.date)
     
 

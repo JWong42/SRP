@@ -40,12 +40,14 @@ def main_page(request):
         brand['followers'] = page_object.followers
         brands.append(brand) 
         
-        
-    if request.method == 'POST':   
-        form = AddPageForm(request.POST)
-        if form.is_valid(): 
-            page_id = form.cleaned_data['id']
-            
+    errors = []   
+    if 'p' in request.POST:
+        page_id = request.POST['p']
+        if not page_id: 
+            errors.append('Please enter a G+ Profile ID to add!')
+        elif not isinstance(page_id, int) and len(page_id) != 21: 
+            errors.append('Please enter only the G+ Profile ID!') 
+        else:        
             url = 'https://plus.google.com/' + page_id 
             
             result = urlopen(url)
@@ -110,15 +112,16 @@ def main_page(request):
             
             return redirect('/' + page_id)    
                 
-    else: 
-        form = AddPageForm()
+#    else: 
+#        form = AddPageForm()
                      
     variables = RequestContext(request, {
         'head_title' : u'Django SocialRank', 
         'page_title' : u'Welcome to Social Rank', 
         'page_body' : u"Where you can check and evaluate your brand's social status!!",    
         'brands' : brands,
-        'form' : form, 
+        'errors' : errors, 
+#        'form' : form, 
     })     
     return render_to_response(
         'main_page.html', variables) 
@@ -323,4 +326,28 @@ def individual_page(request, page_id):
     return render_to_response('individual_page.html', variables)
 
 def index(request): 
-    return render_to_response('index.html', RequestContext(request, {} ))
+    flag = False 
+    word = ''
+    errors = []
+#    if request.method == "POST":
+#    if request.POST['p']: 
+    if 'p' in request.POST:
+#        flag = True 
+#        word = 'hello'
+        p = request.POST['p']
+        if not p: 
+            errors.append('Enter a search term.')
+        elif len(p) > 6: 
+            errors.append('Please enter more than 6 characters.')
+        else: 
+            flag = True 
+            word = 'hello' 
+
+
+    return render_to_response('index.html', RequestContext(request, {'flag' : flag, 'word' : word, 'errors' : errors} ))
+    
+    
+    
+    
+    
+    

@@ -34,17 +34,44 @@
           </table>
         </div> <!-- /span12 --> 
         
+      {% if errors %}
+        <div class="span3">
+        <ul> 
+          {% for error in errors %}
+          <li style="color: red;"> {{ error }}</li>
+          {% endfor %}
+        </ul>
+        </div> 
+      {% endif %}
+        
         <div class="span3">
            <form class="well" action="." method="post">
         <!--   {{ form.as_table }} --> 
            <label>Track Your Page Statistics!</label>
-
-           <input type="text" placeholder="G+ Profile ID"> 
+           <input type="text" name="p" placeholder="G+ Profile ID"> 
            <input class="btn btn-primary" type="submit" value="Add Page">
            </form>
         </div> <!-- span4 -->
         
-      </div> <!--  /row -->
+      </div> <!--  /row -->     
+    
+        <h2>Request details</h2>
+        
+        <p>
+        Request method: {{ request.method }}
+        <br />
+        GET data: {{ request.GET|default:"No data" }} 
+        <br />
+        POST data: {{ request.POST|default:"No data" }}
+        <br />
+        FILES data: {{ request.FILES|default:"No data" }}
+        </p>
+
+        <h2>Form details</h2>
+
+        <p>
+        Cleaned data: {{ form.cleaned_data|default:"No data" }}
+        </p>
       
     {% endblock %}   
  

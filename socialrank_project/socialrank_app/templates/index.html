@@ -54,6 +54,32 @@
 
       <h1>Bootstrap starter template</h1>
       <p>Use this document as a way to quick start any new project.<br> All you get is this message and a barebones HTML document.</p>
+      
+      </br> 
+      
+      {% if errors %}
+        <ul> 
+          {% for error in errors %}
+          <li> {{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      
+      </br>
+      
+      <form action="" method="POST">
+        <input type="test" name="p">
+        <input type="submit" value="Submit">
+      </form> 
+      
+      </br>
+
+      POST data: {{ request.POST|default:"No data"}}
+      
+      </br> 
+      {% if flag %}
+      {{ word }}
+      {% endif %}
 
     </div> <!-- /container -->
 
