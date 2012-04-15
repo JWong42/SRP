@@ -8,6 +8,7 @@ from socialrank_app.views import *
 urlpatterns = patterns('',
     (r'^$', main_page),
     (r'^test$', index),  
+    (r'^test2/(\w+)$', test2),
     (r'^seedpages/', seed_pages),
     (r'^crawl/', crawl_daily),
     (r'^(\d+)/$', individual_page), 

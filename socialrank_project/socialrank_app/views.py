@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response 
 from django.shortcuts import redirect 
 from django.template import RequestContext 
+from django.db.models import Q
 from socialrank_app.models import * 
 from socialrank_app.forms import AddPageForm
 from socialrank_app.forms import SeedPagesForm 
@@ -11,6 +12,7 @@ import datetime
 import time 
 import calendar
 import re 
+import json 
 
 
 def main_page(request):
@@ -345,7 +347,54 @@ def index(request):
 
 
     return render_to_response('index.html', RequestContext(request, {'flag' : flag, 'word' : word, 'errors' : errors} ))
-    
+
+def test2(request, query): 
+    query = query
+    query = query.strip()
+    if query:    
+        keywords = query.split()
+        q = Q()
+        for keyword in keywords: 
+            q = q & Q(name__icontains=keyword)
+        pages = Pages.objects.filter(q)
+        result = []
+        for page in pages: 
+            link = page.link
+            id = str(re.findall('(\d+)', link))
+            name = str(page.name)
+            data = {}
+            data['id'] = id
+            data['page'] = name
+            result.append(data)
+        result = json.dumps(result)
+        return HttpResponse(result)
+             
+#        obj = [{'id': '1234','name': 'Joe', }, {'id': '5678','name': 'Henry'}]
+#        data = json.dumps(obj)
+#        return HttpResponse(data)
+
+ #   if 'data' in request.GET: 
+ #       query = request.GET['data'].strip()
+ #       if query: 
+ #           keywords = query.split()
+ #           q = Q() 
+ #           for keyword in keywords: 
+ #               q = q & Q(name__icontains=keyword)
+ #           pages = Pages.objects.filter(q)
+ #           result = []
+ #           for page in pages: 
+ #               link = page.link 
+ #               id = str(re.findall('(\d+)', link))
+ #               name = str(page.name)
+ #               data = {}
+ #               data['ID'] = id 
+ #               data['Page'] = name
+ #               result.append(data)
+ #           result = json.dumps(result)
+ #           return HttpResponse(result)
+ #       else: 
+ #           result = ''
+ #           return HttpResponse(result)  
     
     
     
