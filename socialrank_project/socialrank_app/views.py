@@ -305,17 +305,23 @@ def individual_page(request, page_id):
     
     results = []
     results2 = []
-    
-    for each in friends_set:
-        date = each.date
+
+    for i in range(len(friends_set)): 
+        date = friends_set[i].date
         date = calendar.timegm(date.timetuple())        
         date = date * 1000 
-        date2 = each.date.strftime("%m-%d-%Y")
+        date2 = friends_set[i].date.strftime("%m-%d-%Y")
 #         date = time.mktime(date.timetuple())
-        following = each.following 
-        followers = each.followers
+        following = friends_set[i].following 
+        followers = friends_set[i].followers
+
+        if friends_set[0].id == friends_set[i].id: 
+            growth = 0
+        else:         
+            growth = friends_set[i].followers - friends_set[i-1].followers 
+
         results.append([date, followers])
-        results2.append([date2, following, followers])
+        results2.append([date2, following, followers, growth])
     
     results2.reverse()
          
