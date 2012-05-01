@@ -15,19 +15,22 @@ import re
 import json 
 
 
-def main_page(request):
-  
-    brands = []
-    
+def main_page(request):    
     # Select the friends statistics of pages for today and order from highest followers to lowest 
+     
     pages = Friends.objects.filter(date=datetime.date.today()).order_by('-followers')
     
+    if not pages: 
+        recent_date = Friends.objects.order_by('-date')[0].date
+        pages = Friends.objects.filter(date=recent_date).order_by('-followers')
+         
     rank = 1 
+    brands = []
     
     for page_object in pages: 
         
         brand = {}       
-        
+            
         brand['rank'] = rank 
         rank += 1 
         name = page_object.page.name 
@@ -41,7 +44,7 @@ def main_page(request):
         brand['following'] = page_object.following
         brand['followers'] = page_object.followers
         brands.append(brand) 
-        
+            
     errors = []   
     if 'p' in request.POST:
         page_id = request.POST['p']
@@ -51,10 +54,10 @@ def main_page(request):
             errors.append('Please enter only the G+ Profile ID!') 
         else:        
             url = 'https://plus.google.com/' + page_id 
-            
+               
             result = urlopen(url)
             soup = BeautifulSoup(result)                 
-                 
+                    
             #brand's page name                  
             page_name = soup.find('span', {"class" : "fn"})
             page_name = str(page_name) 
@@ -65,13 +68,13 @@ def main_page(request):
                 page_name = '><'
             page_name = page_name.strip('>' + '<') 
             page_name = re.sub('amp;', '', page_name)
-               
+                   
             #brand's image                
             img = soup.find('img', {"class" : "kM5Oeb-wsYqfb photo"})
             img = img["src"]
             img = img.strip('//')
             img = img.encode('utf-8')
-                
+                    
             #brand's no_following                
             a = soup.find('h4', {"class" : "nPQ0Mb c-wa-Da" })
             a = str(a)
@@ -82,7 +85,7 @@ def main_page(request):
                 a2 = '(0)'
             no_following = a2.strip('(' + ')')
             no_following= int(no_following)
-                            
+                                
             #brand's no_followers               
             b = soup.find('h4', {"class" : "nPQ0Mb pD8zNd" }) 
             b = str(b)
@@ -93,7 +96,7 @@ def main_page(request):
                 b2 = '(0)'
             no_followers = b2.strip('(' + ')')
             no_followers = int(no_followers)
-                
+                    
             #since link column in model is unique, get the existing page by its url or create a new one
             page,created = Pages.objects.get_or_create( 
                            link = url                     
@@ -102,29 +105,29 @@ def main_page(request):
             page.name = page_name
             page.img_link = img 
             page.save() 
-              
+                  
             friends,created_dummy = Friends.objects.get_or_create(
                        page = page, 
                        date = datetime.date.today())  
-            
+                
             friends.following = no_following
             friends.followers = no_followers 
-                
+                    
             friends.save()
-            
-            return redirect('/' + page_id)    
                 
-#    else: 
-#        form = AddPageForm()
-                     
+            return redirect('/' + page_id)    
+                    
+    #    else: 
+    #        form = AddPageForm()
+    
     variables = RequestContext(request, {
         'head_title' : u'Django SocialRank', 
         'page_title' : u'Welcome to Social Rank', 
         'page_body' : u"Where you can check and evaluate your brand's social status!!",    
         'brands' : brands,
         'errors' : errors, 
-#        'form' : form, 
-    })     
+    #        'form' : form, 
+        })     
     return render_to_response(
         'main_page.html', variables) 
     
@@ -362,7 +365,7 @@ def test2(request, query):
         q = Q()
         for keyword in keywords: 
             q = q & Q(name__icontains=keyword)
-        pages = Pages.objects.filter(q)
+        pages = Pages.objects.filter(q)[:5]
         result = []
         for page in pages: 
             link = page.link
