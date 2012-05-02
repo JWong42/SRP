@@ -3,6 +3,7 @@ from django.shortcuts import render_to_response
 from django.shortcuts import redirect 
 from django.template import RequestContext 
 from django.db.models import Q
+from django.core.paginator import Paginator, InvalidPage 
 from socialrank_app.models import * 
 from socialrank_app.forms import AddPageForm
 from socialrank_app.forms import SeedPagesForm 
@@ -128,8 +129,7 @@ def main_page(request):
         'errors' : errors, 
     #        'form' : form, 
         })     
-    return render_to_response(
-        'main_page.html', variables) 
+    return render_to_response('main_page.html', variables) 
     
 def seed_pages(request): 
     if request.method == 'POST': 
@@ -404,8 +404,64 @@ def test2(request, query):
  #       else: 
  #           result = ''
  #           return HttpResponse(result)  
+
+def top_pages(request): 
+    # Select the friends statistics of pages for today and order from highest followers to lowest 
+     
+    query_pages = Friends.objects.filter(date=datetime.date.today()).order_by('-followers')
     
+    if not query_pages: 
+        recent_date = Friends.objects.order_by('-date')[0].date
+        query_pages = Friends.objects.filter(date=recent_date).order_by('-followers')
+   
+    paginator = Paginator(query_pages, 10)
+    try: 
+        page_number = int(request.GET['page'])
+    except (KeyError, ValueError): 
+        page_number = 1
+    try: 
+        page = paginator.page(page_number) 
+    except InvalidPage:
+        raise Http404
+    pages = page.object_list   
     
+    end_rank = page_number * 10      
+    ranks = [(end_rank -(10 - i)) for i in range(1,11)]
+    rank = 0  
+    brands = []
+    
+    for page_object in pages: 
+        
+        brand = {}       
+            
+        brand['rank'] = ranks[rank] 
+        rank += 1 
+        name = page_object.page.name 
+        name = re.sub('amp;', '', name)
+        brand['name'] = name
+        link = str(page_object.page.link)
+        link = re.search('[0-9]+', link).group(0)
+        link = int(link)
+        brand['link'] = link 
+        brand['img'] = page_object.page.img_link
+        brand['following'] = page_object.following
+        brand['followers'] = page_object.followers
+        brands.append(brand) 
+    
+    variables = RequestContext(request, {
+  #      'head_title' : u'Django SocialRank', 
+  #      'page_title' : u'Welcome to Social Rank', 
+  #      'page_body' : u"Where you can check and evaluate your brand's social status!!",    
+        'brands' : brands,
+        'show_paginator': paginator.num_pages > 1,
+        'has_prev': page.has_previous(),
+        'has_next': page.has_next(),
+        'page': page_number,
+        'pages': paginator.num_pages,
+        'next_page': page_number + 1,
+        'prev_page': page_number - 1,        
+        })     
+    return render_to_response('top_pages.html', variables) 
     
     
     

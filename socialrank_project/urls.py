@@ -11,7 +11,8 @@ urlpatterns = patterns('',
     (r'^test2/(\w+)$', test2),
     (r'^seedpages/', seed_pages),
     (r'^crawl/', crawl_daily),
-    (r'^(\d+)/$', individual_page), 
+    (r'^(\d+)/$', individual_page),
+    (r'^top_pages$', top_pages), 
 
 
     # Examples:
